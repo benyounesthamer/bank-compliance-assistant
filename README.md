@@ -65,7 +65,17 @@ Retrieval, measured on 42 questions in three languages (no API needed):
 
 Each layer earns its place: keywords are strong on exact French terms, vectors handle other languages, and the reranker, which reads question and passage together, gives the largest gain. Every cited passage is checked in code: an answer citing a passage the model was not given becomes a refusal.
 
-Answer quality (end to end, judged against reference answers, including 6 questions the circulars cannot answer): see [eval/answers.md](eval/answers.md).
+End-to-end answers on 48 questions (answers by `gpt-oss-20b`, judged by `qwen3.8-27b` against reference answers):
+
+| Questions | Correct | Cites a right article | Refused |
+|---|---|---|---|
+| French (26) | 77% | 81% | 19% |
+| English (8) | 75% | 75% | 25% |
+| Arabic (8) | 62% | 88% | 12% |
+| **All answerable (42)** | **74%** | 81% | 19% |
+| **Unanswerable (6)** | **5 of 6 refused** | – | – |
+
+The main weakness is over-caution, not search: the right article was among the retrieved passages for 98% of questions, yet 8 of the 11 errors are refusals. One error is a real mix-up between two columns of a rate table, and two are partly due to vague reference answers. Every answer and the judge's reason are in [eval/answers.md](eval/answers.md). The next improvement is the answer prompt, measured on this same set.
 
 ## The documents
 
