@@ -1,0 +1,33 @@
+{
+  "_about": "Expected status of each obligation of circular 2022-08 (data/obligations/2022-08.json) for each test policy. Obligations not listed are 'met'.",
+  "alpha_conforme.md": {},
+  "beta_lacunes.md": {
+    "2022-08-O12": "missing",
+    "2022-08-O16": "missing",
+    "2022-08-O20": "missing",
+    "2022-08-O24": "missing",
+    "2022-08-O26": "missing",
+    "2022-08-O28": "missing",
+    "2022-08-O29": "missing",
+    "2022-08-O30": "missing",
+    "2022-08-O31": "missing",
+    "2022-08-O32": "missing"
+  },
+  "gamma_contradictions.md": {
+    "2022-08-O18": "contradicts",
+    "2022-08-O19": "contradicts",
+    "2022-08-O22": "contradicts",
+    "2022-08-O28": "contradicts"
+  },
+  "delta_policy_en.md": {
+    "2022-08-O24": "missing",
+    "2022-08-O25": "missing",
+    "2022-08-O27": "missing"
+  },
+  "_notes": {
+    "gamma O10": "procedures updated every three years: still a periodic review, so met",
+    "delta O19": "15 calendar days is stricter than 15 working days, so met (a trap for the checker)",
+    "gamma O18": "acknowledgement only on request contradicts 'for every complaint'",
+    "gamma O22": "the policy states no acknowledgement is generated automatically"
+  }
+}

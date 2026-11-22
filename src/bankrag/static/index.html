@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bank Compliance Assistant</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--text:#1d1d1b;--muted:#6b6b65;--line:#e2e2dc;--accent:#1f5f8b;
+--ok:#1d7a46;--warn:#9a6a00;--bad:#b3261e;--okbg:#e8f5ee;--warnbg:#fff4d6;--badbg:#fdecea;--mutedbg:#eeeeea}
+@media (prefers-color-scheme:dark){:root{--bg:#151514;--card:#1f1f1d;--text:#ededE8;--muted:#9b9b94;--line:#34342f;--accent:#7cb7e0;
+--ok:#5cc98a;--warn:#e6b84a;--bad:#ff8a7e;--okbg:#17301f;--warnbg:#33290f;--badbg:#3a1c1a;--mutedbg:#2a2a27}}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:900px;margin:0 auto}
+h1{font-size:25px;margin:0 0 4px}p.sub{color:var(--muted);margin:0 0 20px}
+.tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 14px;font:inherit;color:var(--muted);cursor:pointer}
+.tabs button.on{color:var(--text);border-color:var(--accent);font-weight:600}
+form.ask{display:flex;gap:8px}
+input,textarea,select{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);font:inherit}
+input{flex:1}textarea{width:100%;min-height:220px;font-size:14px;line-height:1.5;resize:vertical}
+select{min-width:260px}
+button.go{padding:10px 18px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;cursor:pointer}
+button.go:disabled{opacity:.6;cursor:wait}
+.ex{margin:10px 0 24px;display:flex;flex-wrap:wrap;gap:8px}
+.ex a{font-size:14px;color:var(--accent);cursor:pointer;border:1px solid var(--line);border-radius:99px;padding:3px 12px;background:var(--card)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.answer{font-size:17px}.src{margin-top:14px;border-top:1px solid var(--line);padding-top:10px;font-size:14px;color:var(--muted)}
+.src div{margin:4px 0}.src b{color:var(--text)}[dir=rtl]{text-align:right}.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:16px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px}
+.tile b{display:block;font-size:24px}.tile.ok b{color:var(--ok)}.tile.warn b{color:var(--warn)}.tile.bad b{color:var(--bad)}
+.finding{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:8px 0}
+.tag{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;font-weight:600;margin-right:6px}
+.tag.ok{background:var(--okbg);color:var(--ok)}.tag.warn{background:var(--warnbg);color:var(--warn)}
+.tag.bad{background:var(--badbg);color:var(--bad)}.tag.muted{background:var(--mutedbg);color:var(--muted)}
+.ev{font-style:italic;margin-top:6px}.why{color:var(--muted);font-size:14px}.meta{font-size:13px;color:var(--muted)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body><main>
+<h1>Bank Compliance Assistant</h1>
+<p class="sub">Tunisian central-bank circulars: ask a question with cited answers, or check an internal policy for compliance gaps.</p>
+<div class="tabs"><button class="on" data-tab="ask">Ask a question</button><button data-tab="gaps">Gap analysis</button></div>
+
+<section id="ask">
+  <form class="ask" id="f"><input id="q" placeholder="e.g. Quel est le délai pour répondre à une réclamation ?" autocomplete="off">
+  <button class="go" id="b">Ask</button></form>
+  <div class="ex">
+    <a>Quel est le délai maximal pour répondre à une réclamation d'un client ?</a>
+    <a>How long must banks keep customer identification records?</a>
+    <a>ما هي نسبة مكافأة الادخار؟</a>
+    <a>What is the minimum capital adequacy ratio?</a>
+  </div>
+  <div id="out"></div>
+</section>
+
+<section id="gaps" hidden>
+  <p class="muted">Paste a complaint-handling policy, or load one of the fictional example policies. It is checked against the
+  32 reviewed obligations of circular 2022-08. Takes about a minute.</p>
+  <div class="row"><select id="example"><option value="">Load an example policy…</option></select>
+  <button class="go" id="gb">Analyze</button></div>
+  <textarea id="policy" placeholder="Paste the policy text here (Markdown or plain text)"></textarea>
+  <div id="gout"></div>
+</section>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('main > section').forEach(s => s.hidden = s.id !== b.dataset.tab);
+});
+
+// question answering
+document.querySelectorAll('.ex a').forEach(a => a.onclick = () => { $('q').value = a.textContent; $('f').requestSubmit(); });
+$('f').onsubmit = async e => {
+  e.preventDefault(); if (!$('q').value.trim()) return; $('b').disabled = true;
+  $('out').innerHTML = '<div class="card muted">Searching the circulars…</div>';
+  try {
+    const r = await fetch('/ask', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question:$('q').value})});
+    const d = await r.json(); if (!r.ok) throw new Error(d.detail || r.status);
+    const src = d.sources.map(s => `<div><b>[${s.n}]</b> Circular ${esc(s.circular)} (${esc(s.date)}), ${esc(s.article || 'preamble')}, page ${s.page} — ${esc(s.title)}</div>`).join('');
+    $('out').innerHTML = `<div class="card"><div class="answer" dir="${d.lang === 'ar' ? 'rtl' : 'ltr'}">${esc(d.answer)}</div>${src ? `<div class="src">${src}</div>` : ''}</div>`;
+  } catch (err) { $('out').innerHTML = `<div class="card">Error: ${esc(err.message)}</div>`; }
+  finally { $('b').disabled = false; }
+};
+
+// gap analysis
+const LABEL = {met:['Met','ok'], partial:['Partial','warn'], missing:['Missing','bad'], contradicts:['Contradicts','bad'], needs_review:['Needs review','muted']};
+const ORDER = {contradicts:0, missing:1, partial:2, needs_review:3, met:4};
+fetch('/examples').then(r => r.json()).then(list => list.forEach(p => {
+  const o = document.createElement('option'); o.value = p.text; o.textContent = p.name; $('example').append(o);
+})).catch(() => {});
+$('example').onchange = () => { if ($('example').value) $('policy').value = $('example').value; };
+$('gb').onclick = async () => {
+  if ($('policy').value.trim().length < 50) { $('gout').innerHTML = '<p class="muted">Paste a policy first.</p>'; return; }
+  $('gb').disabled = true; $('gout').innerHTML = '<div class="card muted">Checking 32 obligations…</div>';
+  try {
+    const r = await fetch('/gaps', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({policy:$('policy').value})});
+    const d = await r.json(); if (!r.ok) throw new Error(d.detail || r.status);
+    const s = d.summary;
+    const tiles = [['met','ok'],['partial','warn'],['missing','bad'],['contradicts','bad'],['needs_review','']]
+      .map(([k, c]) => `<div class="tile ${c}"><b>${s[k]}</b>${k.replace('_', ' ')}</div>`).join('');
+    const items = d.findings.sort((a, b) => ORDER[a.status] - ORDER[b.status]).map(f => {
+      const [label, cls] = LABEL[f.status] || [f.status, 'muted'];
+      const ev = f.evidence ? `<div class="ev">“${esc(f.evidence)}”</div>` : '<div class="muted">Not found in the policy</div>';
+      return `<div class="finding"><span class="tag ${cls}">${label}</span>${esc(f.obligation)}
+        <div class="meta">${esc(f.id)} · ${esc(f.article)}, page ${f.page}</div>${ev}<div class="why">${esc(f.explanation)}</div></div>`;
+    }).join('');
+    $('gout').innerHTML = `<div class="tiles">${tiles}</div>${items}`;
+  } catch (err) { $('gout').innerHTML = `<div class="card">Error: ${esc(err.message)}</div>`; }
+  finally { $('gb').disabled = false; }
+};
+</script>
+</main></body></html>

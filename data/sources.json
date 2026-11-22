@@ -1,0 +1,30 @@
+{
+  "base_url": "https://www.bct.gov.tn/bct/siteprod/documents/",
+  "publisher": "Banque Centrale de Tunisie (official website)",
+  "documents": [
+    {"file": "CB_2017_08_FR.pdf", "lang": "fr"},
+    {"file": "Cir_2018_01_fr.pdf", "lang": "fr", "pair": "Cir_2018_01_ar.pdf"},
+    {"file": "Cir_2018_01_ar.pdf", "lang": "ar", "pair": "Cir_2018_01_fr.pdf"},
+    {"file": "Cir_2018_11_fr.pdf", "lang": "fr", "pair": "Cir_2018_11_ar.pdf"},
+    {"file": "Cir_2018_11_ar.pdf", "lang": "ar", "pair": "Cir_2018_11_fr.pdf",
+     "override": {"circular": "2018-11", "date": "06 نوفمبر 2018"},
+     "note": "This PDF's font maps digits and some letters wrongly, so its extracted text is partly garbled."},
+    {"file": "Cir_2018_13_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2020_01_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2021_06_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2022_07_fr.pdf", "lang": "fr", "pair": "Cir_2022_07_ar.pdf"},
+    {"file": "Cir_2022_07_ar.pdf", "lang": "ar", "pair": "Cir_2022_07_fr.pdf"},
+    {"file": "Cir_2022_08_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2022_09_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2023_01_fr.pdf", "lang": "fr", "pair": "Cir_2023_01_ar.pdf"},
+    {"file": "Cir_2023_01_ar.pdf", "lang": "ar", "pair": "Cir_2023_01_fr.pdf"},
+    {"file": "Cir_2023_03_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2023_04_fr.pdf", "lang": "fr", "pair": "Cir_2023_04_ar.pdf"},
+    {"file": "Cir_2023_04_ar.pdf", "lang": "ar", "pair": "Cir_2023_04_fr.pdf"},
+    {"file": "Cir_2023_05_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2023_06_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2024_01_fr.pdf", "lang": "fr"},
+    {"file": "Cir_2025_01_fr.pdf", "lang": "fr"},
+    {"file": "Note_2025_199_fr.pdf", "lang": "fr"}
+  ]
+}

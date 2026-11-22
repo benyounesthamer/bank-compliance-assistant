@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.env
+# downloaded or generated: fetched again with `bankrag download` and `bankrag index`
+data/pdfs/
+models/
+index/
