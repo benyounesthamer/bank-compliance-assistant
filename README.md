@@ -9,6 +9,8 @@ An AI assistant for Tunisian banking regulation, built on 22 official circulars 
 1. **Compliance gap analysis.** Give it a bank's internal policy. It checks the policy against every obligation of a circular and reports what is met, partial, missing or contradicted, quoting the policy's own words as evidence.
 2. **Cited answers.** Ask a question in French, English or Arabic. It answers from the circulars only, cites the circular, article and page, and says so when the circulars do not contain the answer.
 
+**[Browse the demo →](https://huggingface.co/spaces/Thaamer/bank-compliance-assistant)** real, unedited outputs: the gap report for each example policy and all 48 evaluated answers, shown next to the expected answers (mistakes included). The full app with live analysis runs locally, see [Quick start](#quick-start).
+
 ![Gap report for a fictional bank policy: 28 obligations met, 3 contradicted (acknowledgement only on request, 30 days instead of 15, audit every 5 years instead of 3) and 1 missing, each with the policy's own words as evidence](docs/gap_report.png)
 
 *Gap report for a fictional bank's complaint-handling policy, checked against circular 2022-08.*

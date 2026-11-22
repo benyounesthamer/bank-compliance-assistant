@@ -7,7 +7,7 @@ sdk: docker
 app_port: 7860
 pinned: false
 license: mit
-short_description: Compliance gap analysis and cited answers on Tunisian banking regulation
+short_description: Compliance gap analysis on Tunisian banking rules
 ---
 
 # Bank Compliance Assistant
